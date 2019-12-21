@@ -56,6 +56,7 @@ install:
 	mkdir -p $(DESTDIR)/usr/share/vim/vimfiles/after/syntax
 
 	install -p -m 644 $(FILES) $(DESTDIR)/usr/share/beakerlib
+	install -p profiling.sh $(DESTDIR)/usr/share/beakerlib
 	install -p -m 644 dictionary.vim $(DESTDIR)/usr/share/beakerlib
 
 	install -p -m 644 xslt-templates/* $(DESTDIR)/usr/share/beakerlib/xslt-templates
@@ -125,8 +126,8 @@ $(MANDIR1):
 $(HTMLDIR):
 	mkdir -p $(HTMLDIR)
 
-$(PODFILE): $(FILES) $(PODDIR)
-	$(DOCSJOIN) $(FILES) >$@
+$(PODFILE): $(FILES) $(PODDIR) profiling.sh
+	$(DOCSJOIN) $(FILES) profiling.sh >$@
 
 $(MANPAGE): $(PODFILE) $(MANDIR1)
 	pod2man $(PODFILE) >$@
@@ -157,7 +158,7 @@ $(WIKIDIR)/$(WIKIPREFIX)/%/revisions/$(WIKIREV): $(WIKIDIR)/$(WIKIPREFIX)/% pod2
 	echo '<<TableOfContents(4)>>' >$@; \
 		pod2wiki --style moinmoin $*.sh >> $@ 2>/dev/null || pod2wiki --style moinmoin $(PODFILE) >> $@
 
-MANPAGES = $(addprefix $(MANDIR1)/beakerlib-, $(MODULES:.sh=.1.gz)) $(MANPAGE).gz
+MANPAGES = $(addprefix $(MANDIR1)/beakerlib-, $(MODULES:.sh=.1.gz) profiling.1) $(MANPAGE).gz
 HTMLPAGES = $(addprefix $(HTMLDIR)/beakerlib-, $(MODULES:.sh=.html)) $(HTMLPAGE)
 WIKIREVFILES = $(addsuffix /revisions/$(WIKIREV), $(MODULES:.sh=) $(WIKIPAGE))
 WIKICURFILES = $(addsuffix /current, $(MODULES:.sh=) $(WIKIPAGE))
