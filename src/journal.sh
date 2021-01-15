@@ -771,6 +771,14 @@ __INTERNAL_DeterminePackage(){
         return 0
     fi
 
+    if [[ -e "$BEAKERLIB_DIR/metadata.yaml" ]]; then
+        local yaml
+        declare -A yaml
+        rlYash_parse yaml "$(cat $BEAKERLIB_DIR/metadata.yaml)"
+        echo "${yaml[component][*]}"
+        return 0
+    fi
+
     echo "unknown"
     return 0
 }
