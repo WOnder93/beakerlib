@@ -751,24 +751,27 @@ rljRpmLog(){
 
 # determine SUT package
 __INTERNAL_DeterminePackage(){
-    local package
-    if [[ -z "$TEST" ]]; then
-        if [[ -z "$PACKAGE" ]]; then
-            if [[ -z "$PACKAGES" ]]; then
-                package="unknown"
-            else
-                package="$PACKAGES"
-            fi
+    if [[ -n "$TEST" ]]; then
+        if [[ -n "$TESTPACKAGE" ]]; then
+            echo "$TESTPACKAGE"
         else
-            package="$PACKAGE"
+            local arrPac=(${TEST//// })
+            echo ${arrPac[1]}
         fi
-    elif [[ -n "$TESTPACKAGE" ]]; then
-        package="$TESTPACKAGE"
-    else
-        local arrPac=(${TEST//// })
-        package=${arrPac[1]}
+        return 0
     fi
-    echo "$package"
+
+    if [[ -n "$PACKAGE" ]]; then
+        echo "$PACKAGE"
+        return 0
+    fi
+
+    if [[ -n "$PACKAGES" ]]; then
+        echo "$PACKAGES"
+        return 0
+    fi
+
+    echo "unknown"
     return 0
 }
 
